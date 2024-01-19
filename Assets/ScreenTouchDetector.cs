@@ -1,50 +1,71 @@
 using UnityEngine;
+using DG.Tweening;
 
 public class MouseInput : MonoBehaviour
 {
-    public GameObject Player;
+    public Transform parentPosition;
+    public Transform playerTransform;
+    private float moveTime = 0.75f;
     private bool onLeftSide;
+
+    [SerializeField] private Animator playerAC;
+
     void Update()
     {
-        // Fare sol týklama kontrolü
+        // sol týklama kontrolü / dokunma kontrolü
         if (Input.GetMouseButtonDown(0))
         {
-            // Fare pozisyonu alýnýr
             Vector3 mousePosition = Input.mousePosition;
-
-            // Fare pozisyonunun x koordinatý ekran geniþliðinin yarýsýndan küçükse
+            // sol yarýya veya sað yarýya týklandýðýnýn kontrolü
             if (mousePosition.x < Screen.width / 2)
             {
-                if(!onLeftSide) 
+                if (!onLeftSide)
                 {
+                    R2L();
                     Debug.Log("Sol yarýya týklandý.");
-                    Player.GetComponent<Renderer>().material.color = Color.blue;
-                    Player.transform.position = new Vector3((Player.transform.position.x - 2), Player.transform.position.y, Player.transform.position.z + 2);
+                    parentPosition.DOMoveX(parentPosition.position.x - 2f, moveTime);
+                    parentPosition.DOMoveZ(parentPosition.position.z + 2f, moveTime);
                     onLeftSide = true;
-                    // Burada sol yarýya týklandýðýnda yapýlmasý gereken iþlemleri ekleyebilirsiniz.
                 }
                 else
                 {
-                    Player.transform.position = new Vector3((Player.transform.position.x), Player.transform.position.y, Player.transform.position.z + 2);
+                    Forward();
+                    parentPosition.DOMoveZ(parentPosition.position.z + 2f, moveTime);
                 }
             }
             else
             {
-                if(onLeftSide)
+                if (onLeftSide)
                 {
+                    L2R();
                     Debug.Log("Sað yarýya týklandý.");
-                    Player.GetComponent<Renderer>().material.color = Color.red;
-                    Player.transform.position = new Vector3((Player.transform.position.x + 2), Player.transform.position.y, Player.transform.position.z + 2);
+                    parentPosition.DOMoveX(parentPosition.position.x + 2f, moveTime);
+                    parentPosition.DOMoveZ(parentPosition.position.z + 2f, moveTime);
                     onLeftSide = false;
-                    // Burada sað yarýya týklandýðýnda yapýlmasý gereken iþlemleri ekleyebilirsiniz.
                 }
                 else
                 {
-                    Player.transform.position = new Vector3((Player.transform.position.x), Player.transform.position.y, Player.transform.position.z + 2);
+                    Forward();
+                    parentPosition.DOMoveZ(parentPosition.position.z + 2f, moveTime);
                 }
             }
         }
         Debug.Log(onLeftSide);
+    }
+    void Forward()
+    {
+        playerTransform.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+        playerAC.Play("Player_Jump");
+    }
+    void L2R()
+    {
+        playerTransform.transform.rotation = Quaternion.Euler(0f, 30f, 0f);
+        playerAC.Play("Player_Jump");
+    }
+    void R2L()
+    {
+        playerTransform.transform.rotation = Quaternion.Euler(0f, -30f, 0f);
+        playerAC.Play("Player_Jump");
     }
 }
 
