@@ -18,9 +18,9 @@ public class MouseInput : MonoBehaviour
         // sol týklama kontrolü / dokunma kontrolü
         if (Input.GetMouseButtonDown(0))
         {
-            //DOJump'a geçirmeyi dene!!!
+            //DOJump maybe???
             Vector3 mousePosition = Input.mousePosition;
-            // sol yarýya veya sað yarýya týklandýðýnýn kontrolü
+            // check whether its clicked on left or right
             if (mousePosition.x < Screen.width / 2)
             {
                 if (canJump)
@@ -70,9 +70,9 @@ public class MouseInput : MonoBehaviour
     }
     System.Collections.IEnumerator DisableJumpForDelay()
     {
-        canJump = false; // Disable jumping
+        canJump = false;
         yield return new WaitForSeconds(moveTime);
-        canJump = true; // Enable jumping after the specified delay
+        canJump = true;
     }
     void Forward()
     {
