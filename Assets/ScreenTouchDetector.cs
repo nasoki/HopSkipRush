@@ -5,14 +5,10 @@ public class MouseInput : MonoBehaviour
 {
     public Transform parentPosition, playerTransform;
     private float moveTime = 0.867f;
-    private bool onLeftSide, canJump;
+    private bool onLeftSide, canJump = true;
 
     [SerializeField] private Animator playerAC;
 
-    private void Start()
-    {
-        canJump = true;
-    }
     void Update()
     {
         // sol týklama kontrolü / dokunma kontrolü
