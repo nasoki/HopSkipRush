@@ -18,6 +18,7 @@ public class FallScript : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
+        other.GetComponent<Rigidbody>().useGravity = true;
         playerAC.Play("Player_Falling");
         Debug.Log("bisi oldu la");
     }

@@ -3,54 +3,76 @@ using DG.Tweening;
 
 public class MouseInput : MonoBehaviour
 {
-    public Transform parentPosition;
-    public Transform playerTransform;
-    private float moveTime = 0.75f;
-    private bool onLeftSide;
+    public Transform parentPosition, playerTransform;
+    private float moveTime = 0.867f;
+    private bool onLeftSide, canJump;
 
     [SerializeField] private Animator playerAC;
 
+    private void Start()
+    {
+        canJump = true;
+    }
     void Update()
     {
         // sol týklama kontrolü / dokunma kontrolü
         if (Input.GetMouseButtonDown(0))
         {
+            //DOJump'a geçirmeyi dene!!!
             Vector3 mousePosition = Input.mousePosition;
             // sol yarýya veya sað yarýya týklandýðýnýn kontrolü
             if (mousePosition.x < Screen.width / 2)
             {
-                if (!onLeftSide)
+                if (canJump)
                 {
-                    R2L();
-                    Debug.Log("Sol yarýya týklandý.");
-                    parentPosition.DOMoveX(parentPosition.position.x - 2f, moveTime);
-                    parentPosition.DOMoveZ(parentPosition.position.z + 2f, moveTime);
-                    onLeftSide = true;
-                }
-                else
-                {
-                    Forward();
-                    parentPosition.DOMoveZ(parentPosition.position.z + 2f, moveTime);
+                    if (!onLeftSide)
+                    {
+                        R2L();
+                        Debug.Log("Sol yarýya týklandý.");
+                        //parentPosition.DOMoveX(parentPosition.position.x - 2f, moveTime);
+                        //parentPosition.DOMoveZ(parentPosition.position.z + 2f, moveTime);
+                        parentPosition.DOJump(new Vector3(parentPosition.position.x - 2, parentPosition.position.y, parentPosition.position.z + 2), 0.5f, 1, moveTime, false);
+                        onLeftSide = true;
+                    }
+                    else
+                    {
+                        Forward();
+                        //parentPosition.DOMoveZ(parentPosition.position.z + 2f, moveTime);
+                        parentPosition.DOJump(new Vector3(parentPosition.position.x, parentPosition.position.y, parentPosition.position.z + 2), 0.5f, 1, moveTime, false);
+                    }
+                    StartCoroutine(DisableJumpForDelay());
                 }
             }
             else
             {
-                if (onLeftSide)
+                if(canJump)
                 {
-                    L2R();
-                    Debug.Log("Sað yarýya týklandý.");
-                    parentPosition.DOMoveX(parentPosition.position.x + 2f, moveTime);
-                    parentPosition.DOMoveZ(parentPosition.position.z + 2f, moveTime);
-                    onLeftSide = false;
-                }
-                else
-                {
-                    Forward();
-                    parentPosition.DOMoveZ(parentPosition.position.z + 2f, moveTime);
+                    if (onLeftSide)
+                    {
+                        L2R();
+                        Debug.Log("Sað yarýya týklandý.");
+                        //parentPosition.DOMoveX(parentPosition.position.x + 2f, moveTime);
+                        //parentPosition.DOMoveZ(parentPosition.position.z + 2f, moveTime);
+                        parentPosition.DOJump(new Vector3(parentPosition.position.x + 2, parentPosition.position.y, parentPosition.position.z + 2), 0.5f, 1, moveTime, false);
+                        onLeftSide = false;
+                    }
+                    else
+                    {
+                        Forward();
+                        //parentPosition.DOMoveZ(parentPosition.position.z + 2f, moveTime);
+                        parentPosition.DOJump(new Vector3(parentPosition.position.x, parentPosition.position.y, parentPosition.position.z + 2), 0.5f, 1, moveTime, false);
+                    }
+                    StartCoroutine(DisableJumpForDelay());
                 }
             }
         }
         Debug.Log(onLeftSide);
+    }
+    System.Collections.IEnumerator DisableJumpForDelay()
+    {
+        canJump = false; // Disable jumping
+        yield return new WaitForSeconds(moveTime);
+        canJump = true; // Enable jumping after the specified delay
     }
     void Forward()
     {
