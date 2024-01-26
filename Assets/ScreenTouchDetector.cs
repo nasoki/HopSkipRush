@@ -4,7 +4,7 @@ using DG.Tweening;
 public class MouseInput : MonoBehaviour
 {
     public Transform parentPosition, playerTransform;
-    private float moveTime = 0.867f;
+    private float moveTime = 0.86f;
     private bool onLeftSide, canJump = true;
 
     [SerializeField] private Animator playerAC;
